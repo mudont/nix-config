@@ -9,6 +9,8 @@ If you maked changes to config, run these commands:
 cd /home/murali/Documents/nix-config
 export NIX_CONFIG="experimental-features = nix-command flakes"
 nix flake update
+cp /etc/nixos/hardware-configuration.nix nixos/
+git add .;git commit -m"update hardware config";git push
 sudo nixos-rebuild switch --flake .#nixos
 home-manager switch --flake .#murali@nixos
 ```
