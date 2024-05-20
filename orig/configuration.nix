@@ -2,40 +2,13 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }: {
-  imports = [
-      # Include the results of the hardware scan.
-      /etc/nixos/hardware-configuration.nix
-  ];
-  #programs.git = {
-  #  enable = true;
-    #userName  = "mudont";
-    #userEmail = "donthireddy@yahoo.com";
-  #};
-  users.defaultUserShell = pkgs.zsh;
-  #users.users.murali = {
-  #  shell = pkgs.zsh;
-  #  isNormalUser = true;
-  #  description = "Murali";
-  #  extraGroups = [ "networkmanager" "wheel" ];
-  #  packages = with pkgs; [
-  #    kate
-  #  #  thunderbird
-  #  ];
-  #};
-  # home-manager.users.defaultUserShell.home.stateVersion = "23.11";
-  #home-manager.users.murali = {
-  #  /* The home.stateVersion option does not have a default and must be set */
-  #  stateVersion = "23.11";
-  #  shell = pkgs.zsh;
-  #  isNormalUser = true;
-  #  #home.description = "Murali";
-  #  extraGroups = [ "networkmanager" "wheel" ];
-  #  packages = with pkgs; [
-  #    kate
-  #  #  thunderbird
-  #  ];
-  #};
+{ config, pkgs, ... }:
+
+{
+  imports =
+    [ # Include the results of the hardware scan.
+      ./hardware-configuration.nix
+    ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -68,12 +41,21 @@
     LC_TELEPHONE = "en_US.UTF-8";
     LC_TIME = "en_US.UTF-8";
   };
+  systemd.targets.sleep.enable = false;
+  systemd.targets.suspend.enable = false;
+  systemd.targets.hibernate.enable = false;
+  systemd.targets.hybrid-sleep.enable = false;
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
+
   # Enable the KDE Plasma Desktop Environment.
   services.xserver.displayManager.sddm.enable = true;
   services.xserver.desktopManager.plasma5.enable = true;
+
+  services.xrdp.enable = true;
+  services.xrdp.defaultWindowManager = "startplasma-x11";
+  services.xrdp.openFirewall = true;
 
   # Configure keymap in X11
   services.xserver = {
@@ -104,9 +86,20 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.murali = {
+    isNormalUser = true;
+    description = "Murali";
+    extraGroups = [ "networkmanager" "wheel" ];
+    packages = with pkgs; [
+      kate
+    #  thunderbird
+    ];
+  };
+
   # Enable automatic login for the user.
-  services.xserver.displayManager.autoLogin.enable = true;
-  services.xserver.displayManager.autoLogin.user = "murali";
+  #services.xserver.displayManager.autoLogin.enable = true;
+  #services.xserver.displayManager.autoLogin.user = "murali";
 
   # Install firefox.
   programs.firefox.enable = true;
@@ -117,38 +110,73 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    inetutils
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    zsh
+  git
+  google-chrome
+  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+  wget
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
+  programs.mtr.enable = true;
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
 
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
-  services.gnome.gnome-remote-desktop.enable = true;
-  services.xrdp.enable = true;
-  services.xrdp.defaultWindowManager = "gnome-remote-desktop";
-  services.xrdp.openFirewall = true;
-  services.nginx = {
+
+  # Samba
+  services.samba = {
     enable = true;
-    virtualHosts."localhost" = {
-        default = true;
-        root = "/var/www";
-        #extraConfig = ''
-        #access_log = "/home/murali/logs/nginx.out";
-        #error_log = "/home/murali/logs/nginx.err";
-        #'';
+    securityType = "user";
+    openFirewall = true;
+    extraConfig = ''
+      workgroup = WORKGROUP
+      server string = smbnix
+      netbios name = smbnix
+      security = user 
+      #use sendfile = yes
+      #max protocol = smb2
+      # note: localhost is the ipv6 localhost ::1
+      # hosts allow = 192.168.0. 127.0.0.1 localhost
+      # hosts deny = 0.0.0.0/0
+      guest account = nobody
+      map to guest = bad user
+    '';
+    shares = {
+      public = {
+        path = "/var/www/donthireddy.us/tewerubbeth";
+        browseable = "yes";
+        "read only" = "no";
+        "guest ok" = "yes";
+        "create mask" = "0644";
+        "directory mask" = "0755";
+        "force user" = "username";
+        "force group" = "groupname";
+      };
+      private = {
+        path = "/home/murali";
+        browseable = "yes";
+        "read only" = "no";
+        "guest ok" = "no";
+        "create mask" = "0644";
+        "directory mask" = "0755";
+        "force user" = "username";
+        "force group" = "groupname";
+      };
     };
   };
+
+  services.samba-wsdd = {
+    enable = true;
+    openFirewall = true;
+  };
+
+  networking.firewall.allowPing = true;
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
@@ -163,16 +191,5 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.11"; # Did you read the comment?
 
-  nix.settings.experimental-features = [
-   #"nix-command"
-   #"flakes"
-  ];
-
-  systemd.targets.sleep.enable = false;
-  systemd.targets.suspend.enable = false;
-  systemd.targets.hibernate.enable = false;
-
-  systemd.targets.hybrid-sleep.enable = false;
-
-  programs.zsh.enable = true;
 }
+
