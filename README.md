@@ -7,6 +7,7 @@
 If you maked changes to config, run these commands:
 ```bash
 cd /home/murali/Documents/nix-config
+export NIX_CONFIG="experimental-features = nix-command flakes"
 nix flake update
 sudo nixos-rebuild switch --flake .#nixos
 home-manager switch --flake .#murali@nixos
