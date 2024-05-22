@@ -259,11 +259,6 @@
   # Or disable the firewall altogether.
   networking.firewall.enable = false;
 
-  nix.settings.experimental-features = [
-   "nix-command"
-   "flakes"
-  ];
-
   programs.zsh.enable = true;
 
   # This value determines the NixOS release from which the default
