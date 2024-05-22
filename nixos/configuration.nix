@@ -114,8 +114,10 @@
   #programs.firefox.enable = true;
   programs.git = {
     enable = true;
-    userName  = "mudont";
-    userEmail = "donthireddy@yahoo.com";
+    config = {
+      user.name  = "mudont";
+      user.email = "donthireddy@yahoo.com";
+    }
   };
 
 
