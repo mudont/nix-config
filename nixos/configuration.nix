@@ -86,10 +86,10 @@
 
 
   services.xrdp.enable = true;
-  services.xrdp.defaultWindowManager = "startplasma-x11";
+  #services.xrdp.defaultWindowManager = "startplasma-x11";
+  services.xrdp.defaultWindowManager = "gnome-remote-desktop";
   services.xrdp.openFirewall = true;
   services.gnome.gnome-remote-desktop.enable = true;
-  #services.xrdp.defaultWindowManager = "gnome-remote-desktop";
 
   services.xserver = {
     # Enable the X11 windowing system.
