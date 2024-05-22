@@ -51,10 +51,10 @@
   services.xserver.desktopManager.plasma5.enable = true;
 
   services.xrdp.enable = true;
-  # services.xrdp.defaultWindowManager = "startplasma-x11";
+  services.xrdp.defaultWindowManager = "startplasma-x11";
   services.xrdp.openFirewall = true;
   services.gnome.gnome-remote-desktop.enable = true;
-  services.xrdp.defaultWindowManager = "gnome-remote-desktop";
+  #services.xrdp.defaultWindowManager = "gnome-remote-desktop";
 
   # Configure keymap in X11
   services.xserver = {
