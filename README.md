@@ -22,3 +22,16 @@ nix shell nixpkgs#home-manager
 bash
 home-manager switch --flake .#murali@nixos
 ```
+
+
+## Problems
+
+[Have this issue](https://discourse.nixos.org/t/remote-desktop-black-screen-gnome-rdp-enabled-in-settings-app/42543/12)
+
+RDP works for user donthireddy but not murali.
+Myabe the home manager stuff for Murali is breaking it
+
+
+copy-paste doesn't work between Mac and Linux with RDP
+
+

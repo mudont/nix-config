@@ -86,17 +86,24 @@
 
 
   services.xrdp.enable = true;
-  #services.xrdp.defaultWindowManager = "startplasma-x11";
-  services.xrdp.defaultWindowManager = "gnome-remote-desktop";
+  services.xrdp.defaultWindowManager = "startplasma-x11";
+  #services.xrdp.defaultWindowManager = "gnome-remote-desktop";
+  #services.xrdp.defaultWindowManager = "${pkgs.xterm}/bin/xterm";
   services.xrdp.openFirewall = true;
   services.gnome.gnome-remote-desktop.enable = true;
 
   services.xserver = {
     # Enable the X11 windowing system.
     enable = true;
-    # Enable the KDE Plasma Desktop Environment.
-    displayManager.sddm.enable = true;
-    desktopManager.plasma5.enable = true;
+
+    displayManager = {
+      # gdm.enable = true;
+      sddm.enable = true;
+    };
+    desktopManager = {
+      plasma5.enable = true;
+      # gnome.enable = true;
+    };
     # Configure keymap in X11
     layout = "us";
     xkbVariant = "";
