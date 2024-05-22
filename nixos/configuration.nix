@@ -84,11 +84,6 @@
   systemd.targets.hibernate.enable = false;
   systemd.targets.hybrid-sleep.enable = false;
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  # Enable the KDE Plasma Desktop Environment.
-  services.xserver.displayManager.sddm.enable = true;
-  services.xserver.desktopManager.plasma5.enable = true;
 
   services.xrdp.enable = true;
   services.xrdp.defaultWindowManager = "startplasma-x11";
@@ -96,8 +91,13 @@
   services.gnome.gnome-remote-desktop.enable = true;
   #services.xrdp.defaultWindowManager = "gnome-remote-desktop";
 
-  # Configure keymap in X11
   services.xserver = {
+    # Enable the X11 windowing system.
+    enable = true;
+    # Enable the KDE Plasma Desktop Environment.
+    displayManager.sddm.enable = true;
+    desktopManager.plasma5.enable = true;
+    # Configure keymap in X11
     layout = "us";
     xkbVariant = "";
   };
