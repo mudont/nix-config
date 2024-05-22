@@ -117,7 +117,7 @@
     config = {
       user.name  = "mudont";
       user.email = "donthireddy@yahoo.com";
-    }
+    };
   };
 
 
