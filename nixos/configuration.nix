@@ -26,6 +26,14 @@
     config = {
       # Disable if you don't want unfree packages
       allowUnfree = true;
+      #packageOverrides = pkgs: {
+      #  warp-beta = import (fetchTarball {
+      #      url = "https://github.com/imadnyc/nixpkgs/archive/refs/heads/warp-terminal-initial-linux.zip";
+      #      sha256 = "1blbvznzgcymlbfmr3xw7qnvnq7ncvc60wrzmznvacwjrmbnsw9l";
+      #  }) {
+      #      config = config.nixpkgs.config;  
+      #  };        
+      #};
     };
   };
 
@@ -107,6 +115,7 @@
     # Configure keymap in X11
     layout = "us";
     xkbVariant = "";
+    xautolock.time = 9999;
   };
 
   services.x2goserver.enable = true;
@@ -134,7 +143,7 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-
+  
   users.defaultUserShell = pkgs.zsh;
   users.users.murali = {
     isNormalUser = true;
@@ -176,6 +185,7 @@
     google-chrome
     inetutils
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    # warp-beta.warp-terminal
     wget
     zsh
   ];
@@ -196,12 +206,14 @@
     enable = true;
     virtualHosts."localhost" = {
         default = true;
-        root = "/var/www";
-        #extraConfig = ''
-        #access_log = "/home/murali/logs/nginx.out";
-        #error_log = "/home/murali/logs/nginx.err";
-        #'';
+        addSSL = true;
+        enableACME = true;
+        root = "/var/www/donthireddy.us";
     };
+  };
+  security.acme = {
+    acceptTerms = true;
+    defaults.email = "donthireddy@yahoo.com";
   };
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
