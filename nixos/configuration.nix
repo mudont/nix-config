@@ -6,6 +6,8 @@
   imports = [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./nginx.nix
+      ./postgresql.nix
   ];
   nixpkgs = {
     # You can add overlays here
@@ -203,18 +205,16 @@
   #
   # TODO: Should really import this from nginx.nix but nixos-rebuild doesn't find the file
   #
-  #modules = [
-  #  ./nginx.nix
-  #];
-  services.nginx = {
-    enable = true;
-    virtualHosts."localhost" = {
-        default = true;
-        addSSL = true;
-        enableACME = true;
-        root = "/var/www/donthireddy.us";
-    };
-  };
+  
+  # services.nginx = {
+  #   enable = true;
+  #   virtualHosts."localhost" = {
+  #       default = true;
+  #       addSSL = true;
+  #       enableACME = true;
+  #       root = "/var/www/donthireddy.us";
+  #   };
+  # };
   security.acme = {
     acceptTerms = true;
     defaults.email = "donthireddy@yahoo.com";
